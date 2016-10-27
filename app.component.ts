@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
 import { Movie } from './movie';
-import { Cinema } from './cinema';
-
-const MOVIES: Movie[] = [
-  {id: 111, name: 'Pulp Fiction', director: 'Quentin Tarintino', cast:'Bruce Willis,Samuel L. Jackson'},
-    {id: 112, name: 'Fight Club', director: 'Bryan Singer', cast:'Ed Norton, Brad Pitt'},
-    {id: 113, name: 'Saving Private Ryan', director: 'Steven Spielberg', cast:"Tom Hanks, Vin Diesel"},
-    {id: 114, name: 'Dark Knight Rising', director: 'Chrsitopher Nolan', cast: "Christian Bale, Heath Ledger"},
-];
+import { Cinema } from './cinema'
+import { MovieService } from './movie.service';
 
 const CINEMAS: Cinema[] = [
   {id: 111, name: 'VUE Liffey Valley'},
@@ -89,12 +83,21 @@ const CINEMAS: Cinema[] = [
       margin-right: .8em;
       border-radius: 4px 0 0 4px;
     }
-  `]
+  `],
+  providers: [MovieService]
 })
 export class AppComponent {
   title = 'My Movie App';
-  movies = MOVIES;
+  movies : Movie[];
   selectedMovie: Movie;
+
+  constructor(private movieService: MovieService) { }
+  getMovies(): void {
+    this.movieService.getMovies().then(movies => this.movies = movies);
+  }
+  ngOnInit(): void {
+    this.getMovies();
+  }
 
   onSelect(movie: Movie): void {
     this.selectedMovie = movie;
@@ -107,10 +110,3 @@ export class AppComponent {
     this.selectedCinema = cinema;
   }
 }
-
-
-/*
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/
